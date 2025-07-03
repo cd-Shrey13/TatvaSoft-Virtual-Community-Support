@@ -1,0 +1,35 @@
+.container{
+    display: flex;
+    align-items: center;
+    justify-content: ceenter;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+
+img {
+    height: 400px;
+    width: 400px;
+    object-fit: cover;
+    border: 1px solid gray;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    padding: 1rem;
+    background-color: #2c2f38;
+}
+
+button {
+  border: 1px solid #5c65ba;
+  padding-block: 12px;
+  padding-inline: 8px;
+  border-radius: 6px;
+  background-color: #8692fd;
+  color: white;
+  box-shadow: none;
+  font-weight: 600;
+  cursor: pointer;
+}
