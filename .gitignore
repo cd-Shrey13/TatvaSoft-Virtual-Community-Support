@@ -38,3 +38,78 @@ coverage/
 *.local
 *.cache
 *.tmp
+
+
+
+# Build results
+bin/
+obj/
+out/
+[Bb]uild/
+[Ll]og/
+Generated_Code/
+
+# Visual Studio
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+
+# VS for Mac
+.vscode/
+*.userprefs
+
+# ASP.NET Core
+wwwroot/appsettings*.json
+appsettings.Development.json
+appsettings.Local.json
+appsettings.Production.json
+secrets.json
+
+# EF Core
+Migrations/
+
+# Others
+*.db
+*.sqlite
+*.bak
+*.log
+
+# Dotnet artifacts
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Package cache
+.nuget/
+packages/
+
+# User-specific files
+*.swp
+*.DS_Store
+*.env
+
+# Logs
+*.log
+
+# Test results
+TestResults/
+coverage/
+
+# OS specific
+Thumbs.db
+ehthumbs.db
+.DS_Store
+Desktop.ini
+$RECYCLE.BIN/
+
+# Global JetBrains Rider ignore
+.idea/
+
+# NCrunch
+.ncrunch*
+*.ncrunchproject
