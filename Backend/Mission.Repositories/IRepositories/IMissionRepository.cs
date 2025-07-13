@@ -10,5 +10,10 @@ namespace Mission.Repositories.IRepositories
         string DeleteMissionById(int missionId);
 
         List<MissionResponseModel> ClientMissionList(int userId);
+
+        string ApplyMission(ApplyMissionRequestModel request);
+        string ApproveMission(int id);
+        string DeleteMissionApplication(int id);
+        List<MissionApplicationResponseModel> MissionApplicationList();
     }
 }

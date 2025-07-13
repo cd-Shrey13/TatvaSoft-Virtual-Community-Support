@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting.Internal;
+using Mission.Entities.DTO;
+using Mission.Entities.Entities;
 using Mission.Entities.Models;
 using Mission.Entities.Models.CommonModel;
 using Mission.Entities.Models.MissionsModels;
@@ -58,7 +60,8 @@ namespace Mission.Api.Controllers
         {
             try
             {
-                if(request.EndDate.Date < request.StartDate.Date) { throw new Exception("Selected end date must be greater then start date"); };
+                if (request.EndDate.Date < request.StartDate.Date) { throw new Exception("Selected end date must be greater then start date"); }
+                ;
 
                 result.Data = _missionService.AddMission(request);
                 result.Result = ResponseStatus.Success;
@@ -94,6 +97,7 @@ namespace Mission.Api.Controllers
         {
             string filePath = "";
             string fullPath = "";
+            List<string> fileList = new List<string>();
             var files = Request.Form.Files;
             if (files != null && files.Count > 0)
             {
@@ -117,9 +121,62 @@ namespace Mission.Api.Controllers
                     {
                         await file.CopyToAsync(stream);
                     }
+                    fileList.Add(fullPath);
                 }
             }
-            return Ok(new { success = true, Data = fullPath });
+            return Ok(new { success = true, Data = fileList });
+        }
+
+        [HttpPost]
+        [Route("MissionApplicationApprove")]
+        public ResponseResult MissionApplicationApprove(MissionApplicationApproveDto missionApplication)
+        {
+            try
+            {
+                result.Data = _missionService.ApproveMission(missionApplication.Id);
+                result.Result = ResponseStatus.Success;
+            }
+            catch (Exception ex)
+            {
+                result.Result = ResponseStatus.Error;
+                result.Message = ex.Message;
+            }
+            return result;
+        }
+
+        [HttpGet]
+        [Route("MissionApplicationList")]
+        public ResponseResult MissionApplicationList()
+        {
+            try
+            {
+                result.Data = _missionService.MissionApplicationList();
+                result.Result = ResponseStatus.Success;
+            }
+            catch (Exception ex)
+            {
+                result.Result = ResponseStatus.Error;
+                result.Message = ex.Message;
+            }
+            return result;
+        }
+
+
+        [HttpPost]
+        [Route("MissionApplicationDelete")]
+        public ResponseResult MissionApplicationDelete(MissionApplication application)
+        {
+            try
+            {
+                result.Data = _missionService.DeleteMissionApplication(application.Id);
+                result.Result = ResponseStatus.Success;
+            }
+            catch (Exception ex)
+            {
+                result.Result = ResponseStatus.Error;
+                result.Message = ex.Message;
+            }
+            return result;
         }
     }
 }

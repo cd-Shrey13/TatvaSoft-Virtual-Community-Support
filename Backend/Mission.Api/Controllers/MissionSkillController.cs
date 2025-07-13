@@ -21,10 +21,12 @@ namespace Mission.Api.Controllers
             try
             {
                 result.Data = _missionSkillService.GetMissionSkillList();
+                Console.WriteLine(result.Data);
                 result.Result = ResponseStatus.Success;
             }
             catch (Exception ex)
             {
+                Console.Write(ex.Message);
                 result.Result = ResponseStatus.Error;
                 result.Message = ex.Message;
             }

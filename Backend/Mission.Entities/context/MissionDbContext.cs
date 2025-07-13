@@ -19,6 +19,8 @@ namespace Mission.Entities.context
         public DbSet<Country> Country { get; set; } = null!;
         public DbSet<MissionSkill> MissionSkill { get; set; } = null!;
 
+        public DbSet<MissionApplication> MissionApplications { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             AppContext.SetSwitch("Npgsql.EnableLegancyTimestampBehavior", true);
