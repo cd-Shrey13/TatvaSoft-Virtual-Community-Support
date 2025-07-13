@@ -137,8 +137,8 @@
              <br/> <span style="margin-left:21px;word-break: break-all">{{item.missionSkillName}}</span>
           </div>
           <div class="col-sm-2">
-            <!-- <button class="btnViewDetail btn-btn-outline" [disabled]="item.missionStatus=='Closed'" type="submit"><span class="ViewDetail">Apply <i style="margin-top: 5px !important;" class="fa fa-arrow-right"></i></span></button> -->
-            <button class="btnViewDetail btn-btn-outline" type="submit" *ngIf="item.missionApplyStatus =='Apply'" (click)="checkUserLoginOrNot(item.id)" [disabled]="item.missionStatus=='Closed'"><span class="ViewDetail">Apply &nbsp;<i style="margin-top: 5px !important;" class="fa fa-arrow-right"></i></span></button>
+            <button class="btnViewDetail btn-btn-outline" [disabled]="item.missionStatus=='Closed'" type="submit"><span class="ViewDetail">Apply <i style="margin-top: 5px !important;" class="fa fa-arrow-right"></i></span></button>
+            <button class="btnViewDetail btn-btn-outline -bg-linear-90" type="submit" *ngIf="item.missionApplyStatus =='Apply'" (click)="checkUserLoginOrNot(item.id)" [disabled]="item.missionStatus=='Closed'"><span class="ViewDetail">Apply &nbsp;<i style="margin-top: 5px !important;" class="fa fa-arrow-right"></i></span></button>
             <button class="btn-login" type="submit" *ngIf="item.missionApplyStatus ==='Applied'" [disabled]="item.missionApplyStatus=='Applied'"><span class="Login">Applied</span></button>
             <button class="btn-login" type="submit" *ngIf="item.missionApproveStatus === 'Approved'" [disabled]="item.missionApproveStatus === 'Approved'"><span class="Login">Approve</span></button>
           </div>

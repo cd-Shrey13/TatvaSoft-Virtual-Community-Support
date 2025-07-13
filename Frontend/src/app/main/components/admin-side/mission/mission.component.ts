@@ -40,8 +40,6 @@ export class MissionComponent implements OnInit, OnDestroy {
   }
   fetchData() {
     const missionListSubscription = this._service.missionList().subscribe((data: any) => {
-      console.log("From mission component", data)
-      console.log(data)
       if (data.result == 1) {
         this.missionList = data.data
 

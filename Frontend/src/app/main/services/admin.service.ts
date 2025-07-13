@@ -5,6 +5,7 @@ import { ToastrService } from "ngx-toastr"
 import { Router } from "@angular/router"
 import { APP_CONFIG } from "../configs/environment.config"
 import { API_ENDPOINTS } from "../constants/api.constants"
+import { UserDetail } from "../interfaces/user.interface"
 
 @Injectable({
   providedIn: "root",
@@ -27,5 +28,9 @@ export class AdminService {
   deleteUser(userId: any) {
     return this.http.delete(`${this.apiUrl}${API_ENDPOINTS.AdminUser.DELETE_USER}/${userId}`)
   }
+
+    getUserProfileDetailById(userId: any) {
+      return this.http.get<UserDetail[]>(`${this.apiUrl + API_ENDPOINTS.AUTH.GET_USER_PROFILE}/${userId}`)
+    }
 }
 

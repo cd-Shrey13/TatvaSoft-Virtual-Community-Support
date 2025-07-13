@@ -224,6 +224,8 @@ export class UpdateMissionComponent implements OnInit, OnDestroy {
     let updateImageUrl = ""
     var SkillLists = Array.isArray(value.missionSkillId) ? value.missionSkillId.join(",") : ""
     value.missionSkillId = SkillLists
+    value.startDate = new Date(value.startDate).toISOString();
+    value.endDate = new Date(value.endDate).toISOString();
 
     if (this.editMissionForm.valid) {
       if (this.isFileUpload) {

@@ -1,3 +1,5 @@
+import { Mission } from "./common.interface";
+import { User } from "./user.interface";
 export interface MissionTheme {
   missionThemeId?: number;
   title?: string;
@@ -18,4 +20,15 @@ export interface MissionApplication {
   approvalStatus?: string;
   missionTitle?: string;
   userName?: string;
+}
+
+export interface MissionApplicationApproval {
+  id: number,
+  missionId: number,
+  userId: number,
+  appliedDate: Date,
+  status: boolean,
+  sheet: number,
+  mission: Mission,
+  user: User
 }

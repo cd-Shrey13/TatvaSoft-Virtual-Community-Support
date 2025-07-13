@@ -9,11 +9,13 @@ import { APP_CONFIG } from 'src/app/main/configs/environment.config';
 import { HeaderComponent } from '../../header/header.component';
 import { SidebarComponent } from '../../sidebar/sidebar.component';
 import { Subscription } from 'rxjs';
+import { error } from 'jquery';
+import { MissionTheme } from 'src/app/main/interfaces/common.interface';
 
 @Component({
   selector: 'app-add-mission',
   standalone: true,
-  imports: [HeaderComponent, SidebarComponent,ReactiveFormsModule, NgIf, NgFor],
+  imports: [HeaderComponent, SidebarComponent, ReactiveFormsModule, NgIf, NgFor],
   templateUrl: './add-mission.component.html',
   styleUrls: ['./add-mission.component.css']
 })
@@ -48,6 +50,9 @@ export class AddMissionComponent implements OnInit, OnDestroy {
 
   addMissionFormValid() {
     this.addMissionForm = this._fb.group({
+      missionOrganisationName: [null, Validators.compose([Validators.required])],
+      missionOrganisationDetail: [null, Validators.compose([Validators.required])],
+      missionType: [null, Validators.compose([Validators.required])],
       countryId: [null, Validators.compose([Validators.required])],
       cityId: [null, Validators.compose([Validators.required])],
       missionTitle: [null, Validators.compose([Validators.required])],
@@ -71,6 +76,11 @@ export class AddMissionComponent implements OnInit, OnDestroy {
   get missionSkillId() { return this.addMissionForm.get('missionSkillId') as FormControl; }
   get missionImages() { return this.addMissionForm.get('missionImages') as FormControl; }
   get totalSheets() { return this.addMissionForm.get('totalSheets') as FormControl; }
+
+
+  get missionOrganisationName() { return this.addMissionForm.get('missionOrganisationName') as FormControl; }
+  get missionOrganisationDetail() { return this.addMissionForm.get('missionOrganisationDetail') as FormControl; }
+  get missionType() { return this.addMissionForm.get('missionType') as FormControl; }
 
   setStartDate() {
     const today = new Date();
@@ -107,25 +117,37 @@ export class AddMissionComponent implements OnInit, OnDestroy {
   }
 
   getMissionSkillList() {
-    const getMissionSkillListSubscription = this._service.getMissionSkillList().subscribe((data: any) => {
-      if (data.result == 1) {
-        this.missionSkillList = data.data;
-      } else {
-        this._toast.error({ detail: "ERROR", summary: data.message, duration: APP_CONFIG.toastDuration });
+    const getMissionSkillListSubscription = this._service.getMissionSkillList().subscribe({
+      next: (data: any) => {
+        if (data.result == 1) {
+          this.missionSkillList = data.data;
+        } else {
+          this._toast.error({ detail: "ERROR", summary: data.message, duration: APP_CONFIG.toastDuration });
+        }
+      },
+      error: (err) => {
+        this._toast.error({ detail: "ERROR", summary: err.message, duration: APP_CONFIG.toastDuration })
+        this.unsubscribe.push(getMissionSkillListSubscription);
       }
-    }, err => this._toast.error({ detail: "ERROR", summary: err.message, duration: APP_CONFIG.toastDuration }))
-    this.unsubscribe.push(getMissionSkillListSubscription);
+
+    })
   }
 
   getMissionThemeList() {
-    const getMissionThemeListSubscription = this._service.getMissionThemeList().subscribe((data: any) => {
-      if (data.result == 1) {
-        this.missionThemeList = data.data;
-      } else {
-        this._toast.error({ detail: "ERROR", summary: data.message, duration: APP_CONFIG.toastDuration });
+    const getMissionThemeListSubscription = this._service.getMissionThemeList().subscribe({
+      next: (data: any) => {
+
+        if (data.result == 1) {
+          this.missionThemeList = data.data;
+        } else {
+          this._toast.error({ detail: "ERROR", summary: data.message, duration: APP_CONFIG.toastDuration });
+        }
+      },
+      error: (err) => {
+        this._toast.error({ detail: "ERROR", summary: err.message, duration: APP_CONFIG.toastDuration })
+        this.unsubscribe.push(getMissionThemeListSubscription);
       }
-    }, err => this._toast.error({ detail: "ERROR", summary: err.message, duration: APP_CONFIG.toastDuration }))
-    this.unsubscribe.push(getMissionThemeListSubscription);
+    })
   }
 
   onSelectedImage(event: any) {
@@ -151,35 +173,63 @@ export class AddMissionComponent implements OnInit, OnDestroy {
 
   async onSubmit() {
     this.formValid = true;
-    let imageUrl: any[] = [];
-    let value = this.addMissionForm.value;
-    value.missionSkillId = Array.isArray(value.missionSkillId) ? value.missionSkillId.join(',') : value.missionSkillId;
-    if (this.addMissionForm.valid) {
-      if (this.imageListArray.length > 0) {
-        await this._commonService.uploadImage(this.formData).pipe().toPromise().then((res: any) => {
-          if (res.success) {
-            imageUrl = res.data;
-          }
-        }, err => { this._toast.error({ detail: "ERROR", summary: err.message, duration: APP_CONFIG.toastDuration }) });
-      }
-      let imgUrlList = imageUrl.map(e => e.replace(/\s/g, "")).join(",");
-      value.missionImages = imgUrlList;
-      const addMissionSubscription = this._service.addMission(value).subscribe((data: any) => {
+    const value = this.addMissionForm.value;
+    let imageUrl: string[] = [];
 
-        if (data.result == 1) {
-          this._toast.success({ detail: "SUCCESS", summary: data.data, duration: APP_CONFIG.toastDuration });
-          setTimeout(() => {
-            this._router.navigate(['admin/mission']);
-          }, 1000);
+
+    // Convert skill IDs to string if it's an array
+    if (Array.isArray(value?.missionSkillId)) {
+      value.missionSkillId = value.missionSkillId.join(',');
+    }
+
+    // Cast fields to their appropriate format.
+    value.cityId = Number(value.cityId);
+    value.countryId = Number(value.countryId);
+    value.missionThemeId = Number(value.missionThemeId);
+    value.totalSheets = Number(value.totalSheets);
+    value.startDate = new Date(value.startDate).toISOString();
+    value.endDate = new Date(value.endDate).toISOString();
+
+
+
+    if (this.addMissionForm.valid) {
+      // Upload image if any
+      if (this.imageListArray.length > 0) {
+        try {
+          const res: any = await this._commonService.uploadImage(this.formData).toPromise();
+          if (res.success) {
+            
+            imageUrl = Array.isArray(res.data) ? res.data.map((e: any) => String(e)) : [];
+            const imgUrlList = imageUrl.map(e => e.trim()).join(",");
+            console.log(imgUrlList)
+            value.missionImages = imgUrlList;
+
+          }
+        } catch (err: any) {
+          this._toast.error({ detail: "ERROR", summary: err.message, duration: APP_CONFIG.toastDuration });
         }
-        else {
-          this._toast.error({ detail: "ERROR", summary: data.message, duration: APP_CONFIG.toastDuration });
+      }
+
+
+      const addMissionSubscription = this._service.addMission(value).subscribe({
+        next: (data: any) => {
+          if (data.result === 1) {
+            this._toast.success({ detail: "SUCCESS", summary: data.data, duration: APP_CONFIG.toastDuration });
+            setTimeout(() => this._router.navigate(['admin/mission']), 1000);
+          } else {
+            this._toast.error({ detail: "ERROR", summary: data.message, duration: APP_CONFIG.toastDuration });
+          }
+        },
+        error: (err: any) => {
+          this._toast.error({ detail: "ERROR", summary: err.message, duration: APP_CONFIG.toastDuration });
         }
       });
+
       this.formValid = false;
       this.unsubscribe.push(addMissionSubscription);
     }
   }
+
 
   onCancel() {
     this._router.navigateByUrl('admin/mission');

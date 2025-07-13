@@ -51,6 +51,67 @@
                   </span>
                 </div>
               </div>
+
+              <div class="row">
+                <div class="col-sm-6">
+                  <label class="col-form-label"
+                    >Mission Organization Name</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="missionOrganisationName"
+                    placeholder="Enter mission Organization Name"
+                  />
+                  <span
+                    class="text-danger"
+                    *ngIf="
+                      missionOrganisationName.invalid &&
+                      (missionOrganisationName.touched || formValid)
+                    "
+                  >
+                    Please Enter Mission Organization Name
+                  </span>
+                </div>
+                <div class="col-sm-6">
+                  <label class="col-form-label"
+                    >Mission Organization Details</label
+                  >
+                  <input
+                    type="text-box"
+                    class="form-control"
+                    formControlName="missionOrganisationDetail"
+                    placeholder="Enter mission Organization Details"
+                  />
+                  <span
+                    class="text-danger"
+                    *ngIf="
+                      missionOrganisationDetail.invalid &&
+                      (missionOrganisationDetail.touched || formValid)
+                    "
+                  >
+                    Please Enter Mission Organization Details
+                  </span>
+                </div>
+                <div class="col-sm-6">
+                  <label class="col-form-label">Mission Type</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="missionType"
+                    placeholder="Enter Mission Type"
+                  />
+                  <span
+                    class="text-danger"
+                    *ngIf="
+                      missionType.invalid && (missionType.touched || formValid)
+                    "
+                  >
+                    Please Enter Mission Type
+                  </span>
+                </div>
+              </div>
+
               <div class="row">
                 <div class="col-sm-6">
                   <label class="col-form-label">Mission Title</label>
@@ -75,9 +136,9 @@
                   <select class="form-select" formControlName="missionThemeId">
                     <option
                       *ngFor="let item of missionThemeList"
-                      value="{{ item.value }}"
+                      value="{{ item.id }}"
                     >
-                      {{ item.text }}
+                      {{ item.themeName }}
                     </option>
                   </select>
                   <span
@@ -201,9 +262,9 @@
                   >
                     <option
                       *ngFor="let item of missionSkillList"
-                      value="{{ item.value }}"
+                      value="{{ item.id }}"
                     >
-                      {{ item.text }}
+                      {{ item.skillName }}
                     </option>
                   </select>
                   <span

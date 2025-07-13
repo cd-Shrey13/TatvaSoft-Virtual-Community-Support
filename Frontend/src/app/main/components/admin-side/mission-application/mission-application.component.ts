@@ -29,7 +29,7 @@ export class MissionApplicationComponent implements OnInit, OnDestroy {
   constructor(
     private _service: MissionService, 
     private _toast: NgToastService, 
-    private route: Router
+    private route: Router,
   ) { }
 
   ngOnInit(): void {
@@ -52,7 +52,9 @@ export class MissionApplicationComponent implements OnInit, OnDestroy {
     this.unsubscribe.push(missionApplicationSubscription);
   }
 
-  approveMissionApplication(value: any) {
+  approveMissionApplication(value: number) {
+    console.log(value);
+    
     const missionApplicationSubscription = this._service.missionApplicationApprove(value).subscribe(
       (data: any) => {
         if (data.result == 1) {

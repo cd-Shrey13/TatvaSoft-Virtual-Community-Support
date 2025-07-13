@@ -39,7 +39,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   shareOrInviteModal: any;
   missionData: any;
   appliedDate: any;
-  missionStatu = false;
+  missionStatus = false;
   favImag = 'assets/Img/heart1.png';
   favImag1 = 'assets/Img/heart11.png';
   view: 'grid' | 'list' = 'grid';
@@ -56,7 +56,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _commonservice: CommonService,
     private _adminservice: AuthService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const currentUserSubscribe = this._adminservice.getCurrentUser().subscribe((data: any) => {
@@ -78,7 +78,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.missionData = '';
     this.unsubscribe.push(currentUserSubscribe, searchListSubscribe);
   }
-  
+
   ngOnDestroy() {
     this.unsubscribe.forEach((sb) => sb.unsubscribe())
   }
@@ -181,7 +181,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             registrationDeadLine: x.registrationDeadLine,
             missionThemeId: x.missionThemeId,
             missionSkillId: x.missionSkillId,
-            missionImages: missionimg.split(',', 1),
+            missionImages: missionimg.split(','),
             missionThemeName: x.missionThemeName,
             missionSkillName: x.missionSkillName,
             missionStatus: x.missionStatus,
@@ -245,34 +245,32 @@ export class HomeComponent implements OnInit, OnDestroy {
     const value = {
       missionId: this.missionData.id,
       userId: this.loginUserId,
-      appliedDate: moment().format('yyyy-MM-DDTHH:mm:ssZ'),
+      appliedDate: new Date().toISOString(),
       status: false,
       sheet: 1,
     };
-    const applyMissionSubscribe = this._service.applyMission(value).subscribe(
-      (data: any) => {
+    const applyMissionSubscribe = this._service.applyMission(value).subscribe({
+      next: (data: { result, data }) => {
         if (data.result == 1) {
           this._toast.success({ detail: 'SUCCESS', summary: data.data });
           setTimeout(() => {
             this.missionData.totalSheets = this.missionData.totalSheets - 1;
           }, 1000);
           window.location.reload();
-        } else {
-          this._toast.error({
-            detail: 'ERROR',
-            summary: data.message,
-            duration: APP_CONFIG.toastDuration,
-          });
         }
       },
-      (err) =>
+      error: (err) => {
         this._toast.error({
           detail: 'ERROR',
           summary: err.message,
           duration: APP_CONFIG.toastDuration,
         })
-    );
-    this.unsubscribe.push(applyMissionSubscribe);
+      },
+      complete: () => {
+        this.unsubscribe.push(applyMissionSubscribe);
+
+      }
+    })
   }
 
   getUserList() {

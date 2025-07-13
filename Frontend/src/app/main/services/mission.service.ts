@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http"
 import { Observable } from "rxjs"
 import { ToastrService } from "ngx-toastr"
 import { Router } from "@angular/router"
-import { MissionApplication } from "../interfaces/mission.interface"
+import { MissionApplication,MissionApplicationApproval } from "../interfaces/mission.interface"
 import { MissionTheme } from "../interfaces/mission.interface"
 import { MissionSkill } from "../interfaces/mission.interface"
 import { environment } from "../../../environments/environment"
@@ -65,7 +65,8 @@ export class MissionService {
     return this.http.post(`${this.apiUrl}${API_ENDPOINTS.MISSION.APPLICATION_DELETE}`, data)
   }
 
-  missionApplicationApprove(data: MissionApplication) {
+  missionApplicationApprove(data: number) {
+    console.log(data)
     return this.http.post(`${this.apiUrl}${API_ENDPOINTS.MISSION.APPLICATION_APPROVE}`, data)
   }
 

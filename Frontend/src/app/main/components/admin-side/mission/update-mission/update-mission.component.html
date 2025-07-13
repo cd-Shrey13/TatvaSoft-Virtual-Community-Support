@@ -14,7 +14,7 @@
                       <div class="col-sm-6">
                           <label class="col-form-label">Country</label>
                           <select class="form-select" (change)="getCityList($event)" formControlName="countryId">
-                            <option *ngFor="let item of countryList" value="{{item.value}}">  {{item.text}}</option>
+                            <option *ngFor="let item of countryList" value="{{item.id}}">  {{item.countryName}}</option>
                           </select>
                           <span class="text-danger" *ngIf="countryId.invalid && (countryId.touched || formValid)">
                             Please Select Country
@@ -24,7 +24,7 @@
                       <label class="col-form-label">City</label>
                       <select class="form-select" formControlName="cityId">
                         <option value="">Select City</option>
-                        <option *ngFor="let item of cityList" value="{{item.value}}">{{item.text}}</option>
+                        <option *ngFor="let item of cityList" value="{{item.id}}">{{item.cityName}}</option>
                       </select>
                       <span class="text-danger" *ngIf="cityId.invalid && (cityId.touched || formValid)">
                         Please Select City

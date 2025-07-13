@@ -20,7 +20,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   userImages: any;
   private unsubscribe: Subscription[] = [];
 
-  constructor(private _service: AuthService, private _router: Router) {}
+  constructor(private _service: AuthService, private _router: Router) { }
 
   ngOnInit(): void {
     const currentUserSubscribe = this._service
@@ -28,7 +28,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
       .subscribe((data: any) => {
         const userName = this._service.getUserDetail();
         if (userName != null || data != null) {
-          console.log(userName, data)
           this.isLogin = true;
           data == null
             ? (this.userDetail = userName.fullName)
@@ -38,7 +37,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
             : (this.loginUserId = data.userId);
           data == null
             ? (this.userImage =
-                this._service.imageUrl + '/' + userName.userImage)
+              this._service.imageUrl + '/' + userName.userImage)
             : (this.userImage = this._service.imageUrl + '/' + data.userImage);
         }
       });

@@ -37,6 +37,7 @@ export class TokenInterceptor implements HttpInterceptor {
             this.route.navigate(["/admin"])
           }
         }
+        console.log(err)
         return throwError(() => new Error("Some other error occured"))
       }),
     )
